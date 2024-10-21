@@ -7,7 +7,6 @@ public class EnemyFollow : MonoBehaviour
 {
     private Rigidbody rb;
     public float speed;
-    public float speedIncrease;
     public GameObject player;
 
     public TMP_Text wallDistanceText;
@@ -21,7 +20,7 @@ public class EnemyFollow : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         wallDistance = Mathf.RoundToInt(Vector3.Distance(gameObject.transform.position, player.transform.position));
 

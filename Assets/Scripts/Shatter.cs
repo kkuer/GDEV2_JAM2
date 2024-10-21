@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class Shatter : MonoBehaviour
 {
-    public GameObject shatteredWall;
-    public float shatterBoost;
+    public GameObject shattered;
+    public float extraBoost;
+    public Vector3 rotationAmount;
 
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == "player")
         {
-            GameObject newWall = Instantiate(shatteredWall, transform.position, Quaternion.Euler(0f, 90f, 0f));
+            GameObject newWall = Instantiate(shattered, transform.position, Quaternion.Euler(rotationAmount));
             Destroy(gameObject);
             Destroy(newWall, 5f);
 
             Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
-            rb.AddForce(Vector3.forward * shatterBoost, ForceMode.Impulse);
+            rb.AddForce(Vector3.forward * extraBoost, ForceMode.Impulse);
         }
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7352031689077027675}
   - component: {fileID: 2501207194636041919}
   - component: {fileID: 5979846844625505578}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BreakableWall
   m_TagString: breakableObject
   m_Icon: {fileID: 0}
@@ -29,13 +29,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1928937267631287376}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.45, z: 5.79}
-  m_LocalScale: {x: 170, y: 170, z: 170}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 2.45, z: 0}
+  m_LocalScale: {x: 120, y: 120, z: 120}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &1748913757741597439
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ce742dab8b9c6d541b4043cdf097474f, type: 2}
+  - {fileID: 2100000, guid: 031817b6dfa93944fbaa9c91c9f12aa1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -98,9 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21808bccef1e3c3488a390505f66769a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shatteredWall: {fileID: 3553601463592373579, guid: e3b1fbca708dda84f932b99fb5d3d338,
+  shattered: {fileID: 3553601463592373579, guid: e3b1fbca708dda84f932b99fb5d3d338,
     type: 3}
-  shatterBoost: 7
+  extraBoost: 7
+  rotationAmount: {x: 90, y: 270, z: 0}
 --- !u!54 &2501207194636041919
 Rigidbody:
   m_ObjectHideFlags: 0
