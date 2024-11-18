@@ -127,6 +127,8 @@ public class PlayerController : MonoBehaviour
     {
         rb.AddForce(Vector3.forward * speed);
 
+        score += (decimal)0.05;
+
         if (Input.GetAxis("Horizontal") > 0)
         {
             rb.AddForce(Vector3.right * speed);
