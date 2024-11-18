@@ -12,7 +12,13 @@ public class PlayerController : MonoBehaviour
 {
     public float speed;
     public float baseSpeed;
-    public float boostSpeed;
+
+    public float boostSpeed1x;
+    public float boostSpeed2x;
+    public float boostSpeed4x;
+
+    public float jumpHeight;
+    public bool grounded = true;
 
     public decimal score;
 
@@ -23,6 +29,10 @@ public class PlayerController : MonoBehaviour
     public float maxBoost;
 
     public Slider boostBar;
+    public Image boostBarFill;
+    public Color boost1x;
+    public Color boost2x;
+    public Color boost4x;
 
     public GameLoop gameLoop;
 
@@ -33,6 +43,8 @@ public class PlayerController : MonoBehaviour
     public bool gameActive = true;
 
     public ParticleSystem boostParticles;
+    public GameObject jumpParticles;
+    public GameObject boostCollectParticles;
 
     public GameObject breakParticlesObject;
     public ParticleSystem breakParticles;
@@ -48,6 +60,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource breakSFX;
     public AudioSource pickupSFX;
     public AudioSource loseSFX;
+    public AudioSource jumpSFX;
 
     private void Start()
     {
@@ -55,6 +68,7 @@ public class PlayerController : MonoBehaviour
         ppfxVolume.profile.TryGet(out ca);
         boostBar.maxValue = maxBoost;
         speed = baseSpeed;
+        grounded = true;
     }
     private void Update()
     {
@@ -73,7 +87,7 @@ public class PlayerController : MonoBehaviour
             finalScoreText.text = score.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
         }
         
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             if (boost > 0f)
             {
@@ -92,7 +106,7 @@ public class PlayerController : MonoBehaviour
                 ca.intensity.value = 0.058f;
             }
         }
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             boosting = false;
             ca.intensity.value = 0.058f;
@@ -121,12 +135,34 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(-Vector3.right * speed);
         }
+        if (Input.GetKey(KeyCode.Space) && grounded == true)
+        {
+            GameObject newJumpParticles = Instantiate(jumpParticles,
+                new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.5f, gameObject.transform.position.z),
+                Quaternion.Euler(0, 0, 0));
+            newJumpParticles.GetComponent<ParticleSystem>().Play();
+            rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+            jumpSFX.Play();
+            grounded = false;
+        }
 
         if (boost < 0)
         {
             boostBar.value = 0;
         }
-        else if (boost > maxBoost)
+        else if (boost >= 0 && boost < 25)
+        {
+            boostBarFill.color = boost1x;
+        }
+        else if (boost >= 25 && boost < 40)
+        {
+            boostBarFill.color = boost2x;
+        }
+        else if (boost >= 40)
+        {
+            boostBarFill.color = boost4x;
+        }
+        else if (boost > maxBoost && boost >= 40)
         {
             boostBar.value = maxBoost;
         }
@@ -135,8 +171,19 @@ public class PlayerController : MonoBehaviour
 
         if (boosting)
         {
-            speed = boostSpeed;
-            boost = boost - 1f * Time.deltaTime;
+            if (boost >= 0 && boost < 25)
+            {
+                speed = boostSpeed1x;
+            }
+            else if (boost >= 25 && boost < 40)
+            {
+                speed = boostSpeed2x;
+            }
+            else if (boost >= 40)
+            {
+                speed = boostSpeed4x;
+            }
+            boost = boost - 6f * Time.deltaTime;
             boostParticles.Play();
         }
         else
@@ -150,12 +197,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.tag == "breakableObject")
         {
-            //boost = Mathf.RoundToInt(boost + 1f);
             Destroy(other.gameObject);
-            //if (boost > maxBoost)
-            //{
-            //    boost = maxBoost;
-            //}
 
             float randomCents = UnityEngine.Random.value;
             float randomDollar = UnityEngine.Random.Range(50, 400);
@@ -171,6 +213,10 @@ public class PlayerController : MonoBehaviour
             score += randomScore;
 
         }
+        else if (other.gameObject.tag == "floor")
+        {
+            grounded = true;
+        }
 
     }
     private void OnTriggerEnter(Collider other)
@@ -181,9 +227,14 @@ public class PlayerController : MonoBehaviour
         }
         if (other.gameObject.tag == "boost")
         {
+            //ParticleSystem boostCollectParticles = other.gameObject.GetComponent<ParticleSystem>();
+
+            GameObject newBoostCollectParticles = Instantiate(boostCollectParticles, other.gameObject.transform.position, Quaternion.identity);
+            newBoostCollectParticles.GetComponent<ParticleSystem>().Play();
+
             Destroy(other.gameObject);
 
-            boost = Mathf.RoundToInt(boost + 1f);
+            boost = Mathf.RoundToInt(boost + 5f);
 
             pickupSFX.Play();
 

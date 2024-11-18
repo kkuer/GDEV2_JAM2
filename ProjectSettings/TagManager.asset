@@ -9,6 +9,7 @@ TagManager:
   - breakableObject
   - room
   - wall
+  - floor
   layers:
   - Default
   - TransparentFX
